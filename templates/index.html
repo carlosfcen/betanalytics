@@ -96,22 +96,22 @@
             </div>
         </div>
 
-        <p><strong>Objetivo:</strong> Estimar probabilidades de gol y asistencia para apoyar decisiones de apuestas.</p>
+        <p><strong>Objetivo:</strong> Estimar probabilidades de gol y asistencia para apuestas.</p>
 
         <form method="POST">
             <input type="text" name="buscar" placeholder="Buscar jugador" value="{{ buscar }}">
             <button type="submit">Buscar</button>
         </form>
 
-        <!--  RECOMENDACIONES -->
-        <h2> Recomendaciones de apuesta</h2>
+        <!-- 🔥 RECOMENDACIONES -->
+        <h2>Recomendaciones de apuesta</h2>
 
         <div class="cards">
 
             <div class="card">
                 <h3>⚽ Top Goleadores</h3>
                 <ul>
-                    {% for j in top_goleadores %}
+                    {% for j in top_goleadores or [] %}
                     <li>{{ j["Jugador"] }} - {{ j["Prob_Gol"] }}%</li>
                     {% endfor %}
                 </ul>
@@ -120,7 +120,7 @@
             <div class="card">
                 <h3>🎯 Top Asistencias</h3>
                 <ul>
-                    {% for j in top_asistencias %}
+                    {% for j in top_asistencias or [] %}
                     <li>{{ j["Jugador"] }} - {{ j["Prob_Asistencia"] }}%</li>
                     {% endfor %}
                 </ul>
@@ -129,7 +129,7 @@
         </div>
 
         <!-- 📊 TABLA -->
-        <h2> Jugadores</h2>
+        <h2>Jugadores</h2>
 
         <table>
             <tr>

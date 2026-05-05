@@ -40,6 +40,8 @@
             background-color: #333;
             color: white;
             padding: 10px;
+            display: inline-block;
+            margin-bottom: 15px;
         }
 
         .card {
@@ -72,7 +74,6 @@
             max-width: 700px;
             display: block;
             margin: 30px auto;
-            /* 👈 espacio arriba y abajo */
         }
     </style>
 
@@ -86,23 +87,30 @@
 
         <h1>📊 Análisis de Equipos</h1>
 
-        <!--  TOP EQUIPOS -->
-        <h2> Mejores equipos para apostar</h2>
+        <!-- 🔥 TOP EQUIPOS -->
+        <h2>Mejores equipos para apostar</h2>
 
         <div class="card">
             <ul>
+                {% if equipos %}
                 {% for e in equipos[:5] %}
-                <li><strong>{{ e["Equipo"] }}</strong> → {{ e["Prob_Ganar"] }}% probabilidad de ganar</li>
+                <li>
+                    <strong>{{ e["Equipo"] }}</strong> →
+                    {{ e["Prob_Ganar"] }}% probabilidad de ganar
+                </li>
                 {% endfor %}
+                {% else %}
+                <li>No hay datos disponibles</li>
+                {% endif %}
             </ul>
         </div>
 
         <!-- 📈 GRAFICA -->
         <h2>📈 Probabilidad de ganar</h2>
 
-        <img src="{{ url_for('static', filename='grafica_equipos.png') }}">
+        <img src="{{ url_for('static', filename='grafica_equipos.png') }}" alt="Gráfica equipos">
 
-        <!-- TABLA -->
+        <!-- 📊 TABLA -->
         <h2 style="margin-top: 40px;">Tabla completa</h2>
 
         <table>
@@ -114,16 +122,20 @@
                 <th>Prob Perder</th>
             </tr>
 
+            {% if equipos %}
             {% for equipo in equipos %}
-
             <tr>
                 <td>{{ equipo["Equipo"] }}</td>
                 <td>{{ equipo["Prob_Ganar"] }}%</td>
                 <td>{{ equipo["Prob_Empatar"] }}%</td>
                 <td>{{ equipo["Prob_Perder"] }}%</td>
             </tr>
-
             {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="4">No hay datos disponibles</td>
+            </tr>
+            {% endif %}
 
         </table>
 

@@ -18,11 +18,34 @@ if not os.path.exists("betanalytics.db"):
 def inicio():
 
     conexion = sqlite3.connect("betanalytics.db")
-    conexion.row_factory = sqlite3.Row  # 👈 permite usar nombres de columnas
+    conexion.row_factory = sqlite3.Row
     cursor = conexion.cursor()
 
     buscar = ""
 
+    # ======================
+    # TOP GOLEADORES
+    # ======================
+    cursor.execute("""
+        SELECT * FROM jugadores
+        ORDER BY Goles DESC
+        LIMIT 5
+    """)
+    top_goleadores = cursor.fetchall()
+
+    # ======================
+    # TOP ASISTENCIAS
+    # ======================
+    cursor.execute("""
+        SELECT * FROM jugadores
+        ORDER BY Asistencias DESC
+        LIMIT 5
+    """)
+    top_asistencias = cursor.fetchall()
+
+    # ======================
+    # BUSQUEDA / LISTA GENERAL
+    # ======================
     if request.method == "POST":
         buscar = request.form["buscar"]
 
@@ -44,7 +67,9 @@ def inicio():
     return render_template(
         "index.html",
         jugadores=jugadores,
-        buscar=buscar
+        buscar=buscar,
+        top_goleadores=top_goleadores,
+        top_asistencias=top_asistencias
     )
 
 # ======================
@@ -65,10 +90,7 @@ def equipos():
     equipos = cursor.fetchall()
     conexion.close()
 
-    return render_template(
-        "equipos.html",
-        equipos=equipos
-    )
+    return render_template("equipos.html", equipos=equipos)
 
 # ======================
 # PAGINA GRAFICAS

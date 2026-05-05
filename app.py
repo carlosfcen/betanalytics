@@ -1,81 +1,69 @@
 from flask import Flask, render_template, request
 import sqlite3
+import os
 
 app = Flask(__name__)
 
 # ======================
-# CONEXION DB
+# AUTO-GENERAR BASE DE DATOS (IMPORTANTE PARA RENDER)
 # ======================
-
-def get_db_connection():
-    conn = sqlite3.connect("betanalytics.db")
-    conn.row_factory = sqlite3.Row  # Permite acceder por nombre
-    return conn
+if not os.path.exists("betanalytics.db"):
+    import analisis
+    analisis.ejecutar()
 
 # ======================
 # PAGINA PRINCIPAL
 # ======================
-
 @app.route("/", methods=["GET", "POST"])
 def inicio():
 
-    conn = get_db_connection()
+    conexion = sqlite3.connect("betanalytics.db")
+    conexion.row_factory = sqlite3.Row  # 👈 permite usar nombres de columnas
+    cursor = conexion.cursor()
 
     buscar = ""
 
     if request.method == "POST":
         buscar = request.form["buscar"]
 
-        jugadores = conn.execute("""
-            SELECT * FROM jugadores
-            WHERE Jugador LIKE ?
-            ORDER BY Prob_Gol DESC
-        """, ('%' + buscar + '%',)).fetchall()
+        cursor.execute("""
+        SELECT * FROM jugadores
+        WHERE Jugador LIKE ?
+        ORDER BY Prob_Gol DESC
+        """, ('%' + buscar + '%',))
 
     else:
-        jugadores = conn.execute("""
-            SELECT * FROM jugadores
-            ORDER BY Prob_Gol DESC
-        """).fetchall()
-
-    # 🔥 TOP 5 RECOMENDADOS
-    top_goleadores = conn.execute("""
+        cursor.execute("""
         SELECT * FROM jugadores
         ORDER BY Prob_Gol DESC
-        LIMIT 5
-    """).fetchall()
+        """)
 
-    top_asistencias = conn.execute("""
-        SELECT * FROM jugadores
-        ORDER BY Prob_Asistencia DESC
-        LIMIT 5
-    """).fetchall()
-
-    conn.close()
+    jugadores = cursor.fetchall()
+    conexion.close()
 
     return render_template(
         "index.html",
         jugadores=jugadores,
-        buscar=buscar,
-        top_goleadores=top_goleadores,
-        top_asistencias=top_asistencias
+        buscar=buscar
     )
 
 # ======================
 # PAGINA EQUIPOS
 # ======================
-
 @app.route("/equipos")
 def equipos():
 
-    conn = get_db_connection()
+    conexion = sqlite3.connect("betanalytics.db")
+    conexion.row_factory = sqlite3.Row
+    cursor = conexion.cursor()
 
-    equipos = conn.execute("""
-        SELECT * FROM equipos
-        ORDER BY Prob_Ganar DESC
-    """).fetchall()
+    cursor.execute("""
+    SELECT * FROM equipos
+    ORDER BY Prob_Ganar DESC
+    """)
 
-    conn.close()
+    equipos = cursor.fetchall()
+    conexion.close()
 
     return render_template(
         "equipos.html",
@@ -83,16 +71,15 @@ def equipos():
     )
 
 # ======================
-# GRAFICAS
+# PAGINA GRAFICAS
 # ======================
-
 @app.route("/graficas")
 def graficas():
     return render_template("graficas.html")
 
 # ======================
-# RUN
+# MAIN (IMPORTANTE PARA RENDER)
 # ======================
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)

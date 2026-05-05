@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Gráficas - BetAnalytics</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        img {
+            width: 80%;
+            max-width: 700px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        a {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="/">⬅ Volver</a>
+
+    <h1>📊 Análisis Visual</h1>
+
+    <h2>Goles vs Partidos</h2>
+    <img src="{{ url_for('static', filename='grafica_goles.png') }}">
+
+    <h2>Distribución de Goles</h2>
+    <img src="{{ url_for('static', filename='hist_goles.png') }}">
+
+    <h2>Equipos</h2>
+    <img src="{{ url_for('static', filename='grafica_equipos.png') }}">
+
+</body>
+
+</html>

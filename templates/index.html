@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>BetAnalytics</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: Arial;
+            background-image: url("{{ url_for('static', filename='fondo.jpg') }}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .contenedor {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            flex: 1;
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        img {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        a {
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <div class="nav">
+            <h1>📊 BetAnalytics</h1>
+            <div>
+                <a href="/equipos">Equipos</a> |
+                <a href="/graficas">Gráficas</a>
+            </div>
+        </div>
+
+        <p><strong>Objetivo:</strong> Estimar probabilidades de gol y asistencia para apoyar decisiones de apuestas.</p>
+
+        <form method="POST">
+            <input type="text" name="buscar" placeholder="Buscar jugador" value="{{ buscar }}">
+            <button type="submit">Buscar</button>
+        </form>
+
+        <!--  RECOMENDACIONES -->
+        <h2> Recomendaciones de apuesta</h2>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>⚽ Top Goleadores</h3>
+                <ul>
+                    {% for j in top_goleadores %}
+                    <li>{{ j["Jugador"] }} - {{ j["Prob_Gol"] }}%</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>🎯 Top Asistencias</h3>
+                <ul>
+                    {% for j in top_asistencias %}
+                    <li>{{ j["Jugador"] }} - {{ j["Prob_Asistencia"] }}%</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- 📊 TABLA -->
+        <h2> Jugadores</h2>
+
+        <table>
+            <tr>
+                <th>Jugador</th>
+                <th>Equipo</th>
+                <th>Goles</th>
+                <th>Asistencias</th>
+                <th>Partidos</th>
+                <th>Prob Gol</th>
+                <th>Prob Asistencia</th>
+            </tr>
+
+            {% for jugador in jugadores %}
+            <tr>
+                <td>{{ jugador["Jugador"] }}</td>
+                <td>{{ jugador["Equipo"] }}</td>
+                <td>{{ jugador["Goles"] }}</td>
+                <td>{{ jugador["Asistencias"] }}</td>
+                <td>{{ jugador["Partidos"] }}</td>
+                <td>{{ jugador["Prob_Gol"] }}%</td>
+                <td>{{ jugador["Prob_Asistencia"] }}%</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <!-- 📈 GRAFICAS -->
+        <h2>📈 Análisis visual</h2>
+
+        <img src="{{ url_for('static', filename='grafica_goles.png') }}">
+        <img src="{{ url_for('static', filename='hist_goles.png') }}">
+
+    </div>
+
+</body>
+
+</html>

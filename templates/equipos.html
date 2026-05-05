@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Equipos - BetAnalytics</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: Arial;
+            background-image: url("{{ url_for('static', filename='fondo.jpg') }}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+
+        .contenedor {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        a {
+            text-decoration: none;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+        }
+
+        .card {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        img {
+            width: 100%;
+            max-width: 700px;
+            display: block;
+            margin: 30px auto;
+            /* 👈 espacio arriba y abajo */
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <a href="/">⬅ Volver a Jugadores</a>
+
+        <h1>📊 Análisis de Equipos</h1>
+
+        <!--  TOP EQUIPOS -->
+        <h2> Mejores equipos para apostar</h2>
+
+        <div class="card">
+            <ul>
+                {% for e in equipos[:5] %}
+                <li><strong>{{ e["Equipo"] }}</strong> → {{ e["Prob_Ganar"] }}% probabilidad de ganar</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- 📈 GRAFICA -->
+        <h2>📈 Probabilidad de ganar</h2>
+
+        <img src="{{ url_for('static', filename='grafica_equipos.png') }}">
+
+        <!-- TABLA -->
+        <h2 style="margin-top: 40px;">Tabla completa</h2>
+
+        <table>
+
+            <tr>
+                <th>Equipo</th>
+                <th>Prob Ganar</th>
+                <th>Prob Empatar</th>
+                <th>Prob Perder</th>
+            </tr>
+
+            {% for equipo in equipos %}
+
+            <tr>
+                <td>{{ equipo["Equipo"] }}</td>
+                <td>{{ equipo["Prob_Ganar"] }}%</td>
+                <td>{{ equipo["Prob_Empatar"] }}%</td>
+                <td>{{ equipo["Prob_Perder"] }}%</td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</body>
+
+</html>
